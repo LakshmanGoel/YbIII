@@ -13,17 +13,14 @@ intercombination = atom.trans["intercombination"]
 
 # - setup laser
 laser_1 = PlaneWaveLaserBeam()
-laser_1.direction = (0, 0, 1)
+laser_1.direction = (0, -np.sin(45), np.cos(45))
 laser_1.set_power_from_I(intercombination.Isat) # set power to reach Isat
 laser_1.tag = "las1"
-laser_2 = laser_1.copy() # create a copy
-laser_2.direction = (0, 0, -1) # propagating in opposite direction
-laser_2.tag = "las2"
 
 # - config
 config = Configuration()
 config.atom = atom
-config += laser_1, laser_2
+config += laser_1
 config.add_atomlight_coupling("las1", "intercombination", 0*intercombination.Gamma) # Arguments: laser = "las1", transition = intercombination", detuning = - or +200 * intercombination.Gamma
 #config.add_atomlight_coupling("las2", "green", 1 * intercombination.Gamma)
 
@@ -36,7 +33,7 @@ config += gravity
 
 # - simulation
 sim = RK4(config=config)
-t = np.linspace(0, 0.2, 6000) # timesteps for integration
+t = np.linspace(0, 0.25, 6000) # timesteps for integration
 u0 = (0, 0, 0, 0, 0, 0) # atom starts with vz=100m/s
 res = sim.integrate(u0, t)
 
